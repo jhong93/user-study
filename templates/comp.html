@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block imports %}
+<style>
+div.selected {
+    border: 4px solid #f00;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1>User study tool</h1>
+    <span class="help">Label images in the selection row by clicking.</span>
+</div>
+
+<hr>
+<div class="container-fluid">
+    <div>
+        <span class="key"># images:</span>
+        <span class="value">{{ num_imgs }}</span>
+    </div>
+    <div>
+        <span class="key">Randomized options:</span>
+        <span class="value">{% for n in names %}{% if loop.index0 > 0 %}, {% endif %}{{ n }}{% endfor %}</span>
+    </div>
+    <div>
+        <span class="key">Actions:</span>
+        <button type="button" class="btn btn-danger btn-sm" id="setBtn">Set labels</button>
+        <textarea class="form-control" id="labelsText" rows="1" placeholder="nothing yet..."></textarea>
+    </div>
+</div>
+
+<hr>
+<div class="container-fluid">
+    {% for img in images %}
+    <div class="img-block">
+        <div class="img-block-row">
+            <span class="key">Reference:</span>
+            <div class="img-block-img">
+                <img src="/image/reference/{{ img }}">
+            </div>
+        </div>
+        <div class="img-block-row">
+            <span class="key">Selection:</span>
+            {% for n in names | shuffle %}
+            <div class="img-block-img to-label" optionId="{{ n }}"
+                 imgId="{{ img }}">
+                {% if not blind %}<span>{{ n }}</span>{% endif %}
+                <img src="/image/{{ n }}/{{ img }}">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class='footer-space'></div>
+{% endblock %}
+
+{% block code %}
+<script>
+$('.to-label').click(function() {
+    if ($(this).hasClass('selected')) {
+        $(this).removeClass('selected');
+    } else {
+        $(this).addClass('selected');
+    }
+    collectLabels();
+});
+
+function collectLabels() {
+    let selected = [];
+    $('.to-label').each(function() {
+        if ($(this).hasClass('selected')) {
+            selected.push({
+                name: $(this).attr('optionId'),
+                img: $(this).attr('imgId')
+            })
+        }
+    });
+    $('#labelsText').val(JSON.stringify(selected));
+}
+
+function setLabels() {
+    let s = $('#labelsText').val().trim();
+    if (s.length == 0) return;
+    console.log(s);
+    let labels = JSON.parse(s);
+    for (let i = 0; i < labels.length; i++) {
+        let label = labels[i];
+        let img = $('.to-label[optionId="' + label.name + '"][imgId="' + label.img + '"]');
+        img.addClass('selected');
+    }
+}
+$("#setBtn").click(setLabels);
+</script>
+{% endblock %}

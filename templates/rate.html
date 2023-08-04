@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block imports %}
+<style>
+img {
+    max-width: 100%;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1>User study tool</h1>
+    <span class="help">Rate each image.</span>
+</div>
+
+<hr>
+<div class="container-fluid">
+    <div>
+        <span class="key"># images:</span>
+        <span class="value">{{ num_imgs }}</span>
+    </div>
+    <div>
+        <span class="key">Randomized options:</span>
+        <span class="value">{% for n in names %}{% if loop.index0 > 0 %}, {% endif %}{{ n }}{% endfor %}</span>
+    </div>
+</div>
+
+<hr>
+<div class="container-fluid">
+    {% for img in images %}
+    <div class="img-block">
+        <div class="img-block-row">
+            <span class="key">Reference:</span>
+            <div class="img-block-img">
+                <img src="/image/reference/{{ img.0 }}">
+            </div>
+            <span class="key" style="margin-left: 5em;">Evaluate:</span>
+            <div class="img-block-img">
+                <img src="/image/{{ img.1 }}/{{ img.0 }}">
+            </div>
+
+            <div class="img-block-controls">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check label" name="btnrad-{{ img }}" id="btnrad-{{ img }}-good" value="" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-success" for="btnrad-{{ img }}-good">Good</label>
+
+                    <input type="radio" class="btn-check label" name="btnrad-{{ img }}" id="btnrad-{{ img }}-neutral" value="neutral" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-secondary" for="btnrad-{{ img }}-neutral">Neutral</label>
+
+                    <input type="radio" class="btn-check label" name="btnrad-{{ img }}" id="btnrad-{{ img }}-bad" value="bad" autocomplete="off">
+                    <label class="btn btn-sm btn-outline-danger" for="btnrad-{{ img }}-bad">Bad</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class='footer-space'></div>
+{% endblock %}
+
+{% block code %}
+<script>
+// No JS for now
+</script>
+{% endblock %}
