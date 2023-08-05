@@ -50,7 +50,8 @@ def build_flask_app(exp_dir):
                 'rate.html', images=images_copy, names=names, blind=blind,
                 num_imgs=len(images_copy),
                 has_reference=config['reference_dir'] is not None)
-
+        else:
+            raise NotImplementedError(mode)
 
     @app.route('/image/<name>/<img_name>')
     def get_image(name, img_name):

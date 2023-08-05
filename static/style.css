@@ -56,7 +56,7 @@ div.img-block-row {
 
 div.img-block-img {
     display: inline-block;
-    width: 400px;
+    max-width: 400px;
     /* height: 400px; */
     text-align: center;
     vertical-align: middle;
@@ -64,9 +64,9 @@ div.img-block-img {
 
 div.img-block-controls {
     display: inline-block;
-    width: 200px;
+    max-width: 400px;
     vertical-align: middle;
-    margin: 5em;
+    margin: 1em;
 }
 
 div.img-block img {

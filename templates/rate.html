@@ -29,6 +29,11 @@ img {
         <span class="key">Randomized options:</span>
         <span class="value">{% for n in names %}{% if loop.index0 > 0 %}, {% endif %}{{ n }}{% endfor %}</span>
     </div>
+    <div>
+        <span class="key">Actions:</span>
+        <button type="button" class="btn btn-danger btn-sm" id="setBtn">Set labels</button>
+        <textarea class="form-control" id="labelsText" rows="1" placeholder="nothing yet..."></textarea>
+    </div>
 </div>
 
 <hr>
@@ -36,25 +41,63 @@ img {
     {% for img in images %}
     <div class="img-block">
         <div class="img-block-row">
-            <span class="key">Reference:</span>
             <div class="img-block-img">
+                <span class="key">Reference:</span>
                 <img src="/image/reference/{{ img.0 }}">
             </div>
-            <span class="key" style="margin-left: 5em;">Evaluate:</span>
             <div class="img-block-img">
+                <span class="key">Evaluate:</span>
                 <img src="/image/{{ img.1 }}/{{ img.0 }}">
             </div>
 
             <div class="img-block-controls">
-                <div class="btn-group" role="group">
-                    <input type="radio" class="btn-check label" name="btnrad-{{ img }}" id="btnrad-{{ img }}-good" value="" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-success" for="btnrad-{{ img }}-good">Good</label>
-
-                    <input type="radio" class="btn-check label" name="btnrad-{{ img }}" id="btnrad-{{ img }}-neutral" value="neutral" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-secondary" for="btnrad-{{ img }}-neutral">Neutral</label>
-
-                    <input type="radio" class="btn-check label" name="btnrad-{{ img }}" id="btnrad-{{ img }}-bad" value="bad" autocomplete="off">
-                    <label class="btn btn-sm btn-outline-danger" for="btnrad-{{ img }}-bad">Bad</label>
+                <div class="form-check">
+                    <input class="form-check-input to-label" type="checkbox"
+                        value="" id="Q1"
+                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="Q1">
+                        Is there an unnatural <b>cut through the subject</b>?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input to-label" type="checkbox"
+                        value="" id="Q2"
+                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="Q2">
+                        Is there an unnatural <b>cut through the scene</b> (e.g., objects that a person is interacting with)?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input to-label" type="checkbox"
+                        value="" id="Q3"
+                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="Q3">
+                        Is there too much/too little <b>negative space</b>?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input to-label" type="checkbox"
+                        value="" id="Q4"
+                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="Q4">
+                        Is there unnecessary <b>clutter</b> around the edges that could be mitigated by cropping?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input to-label" type="checkbox"
+                        value="" id="Q5"
+                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="Q5">
+                        Is the image <b>unbalanced</b> (not following the rule-of-thirds, symmetries, etc., egregiously off)?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input to-label" type="checkbox"
+                        value="" id="Q6"
+                        questionId="6" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="Q6">
+                        Is the <b>aspect ratio extreme</b> (very wide or tall)?
+                    </label>
                 </div>
             </div>
         </div>
@@ -67,6 +110,36 @@ img {
 
 {% block code %}
 <script>
-// No JS for now
+$('.to-label').change(function() {
+    collectLabels();
+});
+
+function collectLabels() {
+    console.log('Collecting labels!')
+    let selected = [];
+    $('.to-label').each(function() {
+        if ($(this).is(':checked')) {
+            selected.push({
+                name: $(this).attr('optionId'),
+                img: $(this).attr('imgId'),
+                tag: $(this).attr('id')
+            })
+        }
+    });
+    $('#labelsText').val(JSON.stringify(selected));
+}
+
+function setLabels() {
+    let s = $('#labelsText').val().trim();
+    if (s.length == 0) return;
+    console.log(s);
+    let labels = JSON.parse(s);
+    for (let i = 0; i < labels.length; i++) {
+        let label = labels[i];
+        let checkbox = $('.to-label[optionId="' + label.name + '"][imgId="' + label.img + '"][id="' + label.tag + '"]');
+        checkbox.prop('checked', true);
+    }
+}
+$("#setBtn").click(setLabels);
 </script>
 {% endblock %}
