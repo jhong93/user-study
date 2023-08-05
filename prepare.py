@@ -14,7 +14,7 @@ def get_args():
     parser.add_argument('inputs', nargs='+')
     parser.add_argument('-ref', '--reference_dir', required=True)
     parser.add_argument('--count', type=int, default=100)
-    parser.add_argument('--mode', choices=['rate', 'comp'], required=True)
+    parser.add_argument('-m', '--mode', choices=['rate', 'comp'], required=True)
     parser.add_argument('-o', '--out_dir')
     return parser.parse_args()
 

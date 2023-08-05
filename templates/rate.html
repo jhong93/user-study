@@ -16,7 +16,7 @@ img {
 {% block body %}
 <div class="container-fluid">
     <h1>User study tool</h1>
-    <span class="help">Rate each image.</span>
+    <span class="help">Rate each image. Do not refresh the page without copying your labels.</span>
 </div>
 
 <hr>
@@ -41,6 +41,7 @@ img {
     {% for img in images %}
     <div class="img-block">
         <div class="img-block-row">
+            <span class="key">{{ loop.index }}</span>
             <div class="img-block-img">
                 <span class="key">Reference:</span>
                 <img src="/image/reference/{{ img.0 }}">
@@ -53,49 +54,49 @@ img {
             <div class="img-block-controls">
                 <div class="form-check">
                     <input class="form-check-input to-label" type="checkbox"
-                        value="" id="Q1"
-                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
-                    <label class="form-check-label" for="Q1">
+                        value="" id="{{ img.1 }}-{{ img.0 }}-Q1"
+                        questionId="Q1" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="{{ img.1 }}-{{ img.0 }}-Q1">
                         Is there an unnatural <b>cut through the subject</b>?
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input to-label" type="checkbox"
-                        value="" id="Q2"
-                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
-                    <label class="form-check-label" for="Q2">
+                        value="" id="{{ img.1 }}-{{ img.0 }}-Q2"
+                        questionId="Q2" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="{{ img.1 }}-{{ img.0 }}-Q2">
                         Is there an unnatural <b>cut through the scene</b> (e.g., objects that a person is interacting with)?
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input to-label" type="checkbox"
-                        value="" id="Q3"
-                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
-                    <label class="form-check-label" for="Q3">
+                        value="" id="{{ img.1 }}-{{ img.0 }}-Q3"
+                        questionId="Q3" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="{{ img.1 }}-{{ img.0 }}-Q3">
                         Is there too much/too little <b>negative space</b>?
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input to-label" type="checkbox"
-                        value="" id="Q4"
-                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
-                    <label class="form-check-label" for="Q4">
+                        value="" id="{{ img.1 }}-{{ img.0 }}-Q4"
+                        questionId="Q4" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="{{ img.1 }}-{{ img.0 }}-Q4">
                         Is there unnecessary <b>clutter</b> around the edges that could be mitigated by cropping?
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input to-label" type="checkbox"
-                        value="" id="Q5"
-                        imgId="{{ img.0 }}" optionId="{{ img.1 }}">
-                    <label class="form-check-label" for="Q5">
+                        value="" id="{{ img.1 }}-{{ img.0 }}-Q5"
+                        questionId="Q5" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="{{ img.1 }}-{{ img.0 }}-Q5">
                         Is the image <b>unbalanced</b> (not following the rule-of-thirds, symmetries, etc., egregiously off)?
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input to-label" type="checkbox"
-                        value="" id="Q6"
-                        questionId="6" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
-                    <label class="form-check-label" for="Q6">
+                        value="" id="{{ img.1 }}-{{ img.0 }}-Q6"
+                        questionId="Q6" imgId="{{ img.0 }}" optionId="{{ img.1 }}">
+                    <label class="form-check-label" for="{{ img.1 }}-{{ img.0 }}-Q6">
                         Is the <b>aspect ratio extreme</b> (very wide or tall)?
                     </label>
                 </div>
@@ -122,7 +123,7 @@ function collectLabels() {
             selected.push({
                 name: $(this).attr('optionId'),
                 img: $(this).attr('imgId'),
-                tag: $(this).attr('id')
+                tag: $(this).attr('questionId')
             })
         }
     });
@@ -136,7 +137,7 @@ function setLabels() {
     let labels = JSON.parse(s);
     for (let i = 0; i < labels.length; i++) {
         let label = labels[i];
-        let checkbox = $('.to-label[optionId="' + label.name + '"][imgId="' + label.img + '"][id="' + label.tag + '"]');
+        let checkbox = $('.to-label[optionId="' + label.name + '"][imgId="' + label.img + '"][questionId="' + label.tag + '"]');
         checkbox.prop('checked', true);
     }
 }
