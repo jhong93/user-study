@@ -20,9 +20,14 @@ def get_args():
 
 
 def main(args):
+    print('Preparing experiment: {} images'.format(args.count))
     assert len(args.inputs) % 2 == 0
     inputs = OrderedDict([(args.inputs[2 * i], args.inputs[2 * i + 1])
                           for i in range(len(args.inputs) // 2)])
+
+    print('Treatments:')
+    for k, v in inputs.items():
+        print('  {} : {}'.format(k, v))
 
     img_dict = defaultdict(list)
     for input_alias, input_dir in inputs.items():
@@ -40,6 +45,9 @@ def main(args):
     if len(imgs) > args.count:
         random.shuffle(imgs)
         imgs = imgs[:args.count]
+    elif len(imgs) < args.count:
+        print('Warning: # images, {}, is less than experiment size {}'.format(
+            len(imgs), args.count))
     imgs.sort()
 
     config = {'mode': args.mode,
