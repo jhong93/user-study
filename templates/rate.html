@@ -44,10 +44,12 @@ img {
             <span class="key">{{ loop.index }}</span>
             <div class="img-block-img">
                 <span class="key">Reference:</span>
+                {% if not blind %}<span class="value">{{ img.0 }}</span>{% endif %}
                 <img src="/image/reference/{{ img.0 }}">
             </div>
             <div class="img-block-img">
                 <span class="key">Evaluate:</span>
+                {% if not blind %}<span class="value">{{ img.1 }}</span>{% endif %}
                 <img src="/image/{{ img.1 }}/{{ img.0 }}">
             </div>
 
