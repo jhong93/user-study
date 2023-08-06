@@ -29,6 +29,12 @@ def main(args):
         name_tag_to_images[(label['name'], label['tag'])].add(label['img'])
         name_tag_to_images[(label['name'], 'ANY')].add(label['img'])
 
+        for tag in tags:
+            if tag != label['tag']:
+                name_tag_to_images[
+                    (label['name'], 'ANY~{}'.format(tag))
+                ].add(label['img'])
+
     columns = ['ANY'] + tags
     data = []
     for name in treatment:
@@ -36,6 +42,14 @@ def main(args):
             len(name_tag_to_images[(name, c)]) for c in columns])
 
     print(tabulate(data, headers=['Method'] + columns))
+    print()
+
+    columns2 = ['ANY~{}'.format(x) for x in tags]
+    data2 = []
+    for name in treatment:
+        data2.append([name] + [
+            len(name_tag_to_images[(name, c)]) for c in columns2])
+    print(tabulate(data2, headers=['Method'] + columns2))
 
     print('Done!')
 
